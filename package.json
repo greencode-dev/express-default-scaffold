@@ -1,5 +1,5 @@
 {
-  "name": "webapp-express",
+  "name": "express-default-scaffold",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -8,9 +8,10 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch app.js"
+    "dev": "node --env-file=.env --watch app.js"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mysql2": "^3.20.0"
   }
 }

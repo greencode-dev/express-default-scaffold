@@ -1,13 +1,14 @@
 {
   "name": "express-default-scaffold",
   "version": "1.0.0",
-  "description": "",
+  "description": "Scaffold per API REST con Express 5 e MySQL2 (promise-based)",
   "license": "ISC",
   "author": "Antonio Verde",
   "type": "module",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --env-file=.env app.js",
     "dev": "node --env-file=.env --watch app.js"
   },
   "dependencies": {

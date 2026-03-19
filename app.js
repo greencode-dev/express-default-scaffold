@@ -1,7 +1,7 @@
 import express from "express";
+import router from "./router/router.js";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
-import db from "./data/db.js";
 
 const app = express();
 
@@ -12,6 +12,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send("Benvenuto sul nostro Server Express!");
 });
+
+app.use("/", router);
 
 app.use(notFound);
 app.use(errorHandler);

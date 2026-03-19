@@ -16,7 +16,8 @@ dbConnection.getConnection()
         connection.release();
     })
     .catch(error => {
-        console.error('Errore durante la connessione a MySQL:', error);
+        console.error('ERRORE FATALE: Impossibile connettersi al database!', error);
+        process.exit(1);
     });
 
 export default dbConnection;

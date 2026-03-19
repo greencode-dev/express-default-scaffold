@@ -1,9 +1,12 @@
 import express from "express";
-import router from "./router/router.js";
+import cors from "cors";
+import router from "./router/postRouter.js";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.static("public"));
 
@@ -13,7 +16,7 @@ app.get("/", (req, res) => {
     res.send("Benvenuto sul nostro Server Express!");
 });
 
-app.use("/api/", router);
+app.use("/api/posts", router);
 
 app.use(notFound);
 app.use(errorHandler);

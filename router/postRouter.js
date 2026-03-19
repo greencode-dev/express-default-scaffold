@@ -1,5 +1,5 @@
 import express from "express";
-import controller from "../controller/controller.js";
+import controller from "../controller/postController.js";
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.post("/", controller.store);
 router.put("/:id", controller.update);
 router.delete("/:id", controller.destroy);
 
-export default router;  
+export default router;

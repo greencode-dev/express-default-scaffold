@@ -11,6 +11,7 @@ Struttura minimale pronta all'uso con architettura a layer (Router → Controlle
 | Node.js | >= 20 | Richiesto per `--env-file` e `--watch` |
 | Express | 5.x | Supporto nativo alle Promise nei route handler |
 | mysql2 | 3.x | Driver MySQL con API promise-based |
+| cors | 2.x | Middleware per abilitare il Cross-Origin Resource Sharing |
 | ES Modules | - | `"type": "module"` in package.json |
 
 ## Struttura del progetto
@@ -22,7 +23,7 @@ my-express-promise-scaffold/
 ├── .env.example              # Template variabili d'ambiente
 ├── .gitignore
 ├── controller/
-│   └── controller.js         # Funzioni handler CRUD (stub)
+│   └── postController.js     # Funzioni handler CRUD per i post
 ├── data/
 │   └── db.js                 # Connection pool MySQL (promise)
 ├── middleware/
@@ -31,7 +32,7 @@ my-express-promise-scaffold/
 ├── public/                   # File statici (CSS, immagini, JS client-side)
 │   └── .gitkeep
 └── router/
-    └── router.js             # Definizione rotte RESTful
+    └── postRouter.js         # Definizione rotte RESTful per i post
 ```
 
 ## Flusso della richiesta
@@ -40,25 +41,26 @@ my-express-promise-scaffold/
 Client Request
   │
   ├── express.static("public")     Serve file statici (se presenti)
+  ├── cors()                        Abilita CORS
   ├── express.json()                Parse del body JSON
   ├── GET "/"                       Rotta di benvenuto
-  ├── /api/* → router.js            Dispatch alle rotte API
-  │             └── controller.js   Logica CRUD → db.js (MySQL pool)
+  ├── /api/posts → postRouter.js    Dispatch alle rotte dei post
+  │             └── postController.js Logica CRUD → db.js (MySQL pool)
   ├── notFound.js                   404 per rotte non matchate
   └── errorHandler.js               500 per errori non gestiti
 ```
 
 ## Rotte API
 
-Tutte montate sotto il prefisso `/api/`:
+Tutte montate sotto il prefisso `/api/posts/`:
 
 | Metodo | Path | Controller | Scopo |
 |---|---|---|---|
-| GET | `/api/` | `index` | Lista risorse |
-| GET | `/api/:id` | `show` | Dettaglio risorsa |
-| POST | `/api/` | `store` | Crea risorsa |
-| PUT | `/api/:id` | `update` | Aggiorna risorsa |
-| DELETE | `/api/:id` | `destroy` | Elimina risorsa |
+| GET | `/api/posts/` | `index` | Lista post |
+| GET | `/api/posts/:id` | `show` | Dettaglio post |
+| POST | `/api/posts/` | `store` | Crea post |
+| PUT | `/api/posts/:id` | `update` | Aggiorna post |
+| DELETE | `/api/posts/:id` | `destroy` | Elimina post |
 
 ## Quick Start
 
@@ -148,11 +150,12 @@ Note:
 ## Passo 2 - Installare le dipendenze
 
 ```bash
-npm install express@5 mysql2
+npm install express@5 mysql2 cors
 ```
 
-- **express@5**: la versione 5 ha il supporto nativo alle Promise nei route handler. Se un handler `async` lancia un errore, Express lo cattura automaticamente e lo passa all'error handler, senza bisogno di `try/catch` + `next(err)`.
+- **express@5**: la versione 5 ha il supporto nativo alle Promise nei route handler.
 - **mysql2**: driver MySQL veloce con API promise-based nativa.
+- **cors**: middleware per gestire il Cross-Origin Resource Sharing.
 
 ## Passo 3 - Creare il `.gitignore`
 
@@ -270,7 +273,7 @@ mkdir controller
 ```
 
 ```js
-// controller/controller.js
+// controller/postController.js
 import db from "../data/db.js";
 
 function index(req, res) {
@@ -356,9 +359,9 @@ mkdir router
 ```
 
 ```js
-// router/router.js
+// router/postRouter.js
 import express from "express";
-import controller from "../controller/controller.js";
+import controller from "../controller/postController.js";
 
 const router = express.Router();
 
@@ -380,11 +383,14 @@ Crea il file `app.js`:
 ```js
 // app.js
 import express from "express";
-import router from "./router/router.js";
+import cors from "cors";
+import router from "./router/postRouter.js";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.static("public"));
 
@@ -394,7 +400,7 @@ app.get("/", (req, res) => {
     res.send("Benvenuto sul nostro Server Express!");
 });
 
-app.use("/api/", router);
+app.use("/api/posts", router);
 
 app.use(notFound);
 app.use(errorHandler);
@@ -464,7 +470,7 @@ my-express-promise-scaffold/
 ├── app.js                # 9  - Entry point dell'applicazione
 ├── package.json          # 1  - Manifest del progetto
 ├── controller/
-│   └── controller.js     # 7  - Handler CRUD
+│   └── postController.js # 7  - Handler CRUD
 ├── data/
 │   └── db.js             # 5  - Connection pool MySQL
 ├── middleware/
@@ -473,7 +479,7 @@ my-express-promise-scaffold/
 ├── public/
 │   └── .gitkeep          # 10 - Cartella file statici
 └── router/
-    └── router.js         # 8  - Definizione rotte
+    └── postRouter.js     # 8  - Definizione rotte
 ```
 
 I numeri indicano il passo del cookbook in cui ogni file viene creato.

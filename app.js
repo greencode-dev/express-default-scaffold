@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
     res.send("Benvenuto sul nostro Server Express!");
 });
 
-app.use("/", router);
+app.use("/api/", router);
 
 app.use(notFound);
 app.use(errorHandler);
